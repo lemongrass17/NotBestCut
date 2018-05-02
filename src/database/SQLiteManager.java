@@ -15,7 +15,7 @@ public class SQLiteManager {
         return null;
     }
 
-    /*public void insertIntoPostsCertainDate(String name, String text, String date) throws SQLException {
+    public void insertIntoOrders(String client, String dateStart, String dateFinish) throws SQLException {
         Connection conn = null;
         Statement stmt = null;
 
@@ -24,18 +24,61 @@ public class SQLiteManager {
             conn.setAutoCommit(false);
             stmt = conn.createStatement();
 
-            String sql = "INSERT INTO posts(publish_date, username, post_text) VALUES ('" + date + "', '"+ name +"', '"+ text +"');";
+            String sql = "INSERT INTO orders (client, dateStart, dateFinish) VALUES (" + client + ", " + dateStart + ", " + dateFinish + ");";
             stmt.executeUpdate(sql);
             stmt.close();
             conn.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
+        finally{
             conn.close();
         }
     }
 
+    public void insertIntoMaterial(String description, String height, String width) throws SQLException {
+        Connection conn = null;
+        Statement stmt = null;
+
+        try{
+            conn = openConnection();
+            conn.setAutoCommit(false);
+            stmt = conn.createStatement();
+
+            String sql = "INSERT INTO material (description, height, width) VALUES (" + description + ", " + height + ", " + width + ");";
+            stmt.executeUpdate(sql);
+            stmt.close();
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally{
+            conn.close();
+        }
+    }
+
+    public void insertIntoDetail(String id_orders, String id_material, String height, String width, String count, String isRotated) throws SQLException {
+        Connection conn = null;
+        Statement stmt = null;
+
+        try{
+            conn = openConnection();
+            conn.setAutoCommit(false);
+            stmt = conn.createStatement();
+
+            String sql = "INSERT INTO detail (id_orders, id_material, height, width, count, isRotated) VALUES (" + id_orders + ", " + id_material + ", " + height + ", " + width + ", " + count + ", " + isRotated + ");";
+            stmt.executeUpdate(sql);
+            stmt.close();
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally{
+            conn.close();
+        }
+    }
+
+    /*
     public List<Post> selectPosts(int pageNumber, int postsPerPage) throws SQLException {
         Connection conn = null;
 
