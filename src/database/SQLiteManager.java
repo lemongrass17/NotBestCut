@@ -3,7 +3,6 @@ package database;
 import entities.Detail;
 import entities.Material;
 import entities.Orders;
-import javafx.scene.transform.MatrixType;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -28,7 +27,7 @@ public class SQLiteManager {
 
     //INSERT
 
-    public void insertIntoOrders(String client, String dateStart, String dateFinish) throws SQLException {
+    public void insertIntoOrders(String client, Date dateStart, Date dateFinish) throws SQLException {
         Connection conn = null;
         Statement stmt = null;
 
@@ -37,7 +36,7 @@ public class SQLiteManager {
             conn.setAutoCommit(false);
             stmt = conn.createStatement();
 
-            String sql = "INSERT INTO orders (client, dateStart, dateFinish) VALUES (" + client + ", " + dateStart + ", " + dateFinish + ");";
+            String sql = "INSERT INTO orders (client, dateStart, dateFinish) VALUES (" + client + ", " + new SimpleDateFormat("yyyy-MM-dd").format(dateStart) + ", " + new SimpleDateFormat("yyyy-MM-dd").format(dateFinish) + ");";
             stmt.executeUpdate(sql);
             stmt.close();
             conn.commit();
@@ -49,7 +48,7 @@ public class SQLiteManager {
         }
     }
 
-    public void insertIntoMaterial(String description, String height, String width) throws SQLException {
+    public void insertIntoMaterial(String description, int height, int width) throws SQLException {
         Connection conn = null;
         Statement stmt = null;
 
@@ -70,7 +69,7 @@ public class SQLiteManager {
         }
     }
 
-    public void insertIntoDetail(String id_orders, String id_material, String height, String width, String count, String isRotated) throws SQLException {
+    public void insertIntoDetail(int id_orders, int id_material, int height, int width, int count, boolean isRotated) throws SQLException {
         Connection conn = null;
         Statement stmt = null;
 

@@ -43,11 +43,11 @@ public class Orders {
         return client;
     }
 
-    public String getDateStart(){
-        return new SimpleDateFormat("yyyy-MM-dd").format(dateStart).toString();
+    public Date getDateStart(){
+        return dateStart;
     }
 
-    public String getDateFinish(){
-        return new SimpleDateFormat("yyyy-MM-dd").format(dateFinish).toString();
+    public Date getDateFinish(){
+        return dateFinish;
     }
 }
