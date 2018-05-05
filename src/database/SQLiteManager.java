@@ -4,6 +4,8 @@ import java.sql.*;
 
 public class SQLiteManager {
 
+    //I'm here!!!
+
     private Connection openConnection(){
 
         try{
