@@ -26,6 +26,8 @@ public class SQLiteManager {
         return null;
     }
 
+    //INSERT
+
     public void insertIntoOrders(String client, String dateStart, String dateFinish) throws SQLException {
         Connection conn = null;
         Statement stmt = null;
@@ -89,7 +91,9 @@ public class SQLiteManager {
         }
     }
 
-    public List<Material> selectMaterial(String description, int height, int width) throws SQLException {
+    //SELECT
+
+    public List<Material> selectMaterial() throws SQLException {
         Connection conn = null;
 
         try{
@@ -97,34 +101,13 @@ public class SQLiteManager {
             conn.setAutoCommit(false);
             List<Material> mats = new ArrayList<>();
             Statement stmt = conn.createStatement();
-            String sql = "SELECT description, height, width FROM material";
+            String sql = "SELECT * FROM material;";
 
-            boolean prev = false;
-            if ((description == null) && (height == -1) && (width == -1))
-                sql = sql + ";";
-            else{
-                sql = sql + " WHERE ";
-                if (description != null) {
-                    sql = sql + "description = " + description;
-                    prev = true;
-                }
-                if (height != -1) {
-                    if (prev)
-                        sql = sql + " AND ";
-                    sql = sql + "height = " + height;
-                    prev = true;
-                }
-                if (width != -1) {
-                    if (prev)
-                        sql = sql + " AND ";
-                    sql = sql + "width = " + width;
-                }
-                sql = sql + ";";
-            }
             ResultSet rs = stmt.executeQuery(sql);
 
             while(rs.next()){
                 Material mat = new Material();
+                mat.setId(rs.getInt("id"));
                 mat.setDescription(rs.getString("description"));
                 mat.setHeight(rs.getInt("height"));
                 mat.setWidth(rs.getInt("width"));
@@ -142,7 +125,7 @@ public class SQLiteManager {
         return null;
     }
 
-    public List<Detail> selectDetail(int id_orders, int id_material, int height, int width, int count, boolean isRotated) throws SQLException {
+    public List<Detail> selectDetail(int id_orders, int id_material) throws SQLException {
         Connection conn = null;
 
         try{
@@ -150,51 +133,13 @@ public class SQLiteManager {
             conn.setAutoCommit(false);
             List<Detail> dets = new ArrayList<>();
             Statement stmt = conn.createStatement();
-            String sql = "SELECT id_orders, id_material, height, width, count, isRotated FROM detail";
+            String sql = "SELECT * FROM detail WHERE id_orders = " + id_orders +" AND id_material = " + id_material +";";
 
-            boolean prev = false;
-            if ((id_orders == -1) && (id_material == -1) && (height == -1) && (width == -1) && (count == -1) && (isRotated == false))
-                sql = sql + ";";
-            else{
-                sql = sql + " WHERE ";
-                if (id_orders != -1) {
-                    sql = sql + "id_orders = " + id_orders;
-                    prev = true;
-                }
-                if (id_material != -1) {
-                    if (prev)
-                        sql = sql + " AND ";
-                    sql = sql + "id_material = " + id_material;
-                    prev = true;
-                }
-                if (height != -1) {
-                    if (prev)
-                        sql = sql + " AND ";
-                    sql = sql + "height = " + height;
-                    prev = true;
-                }
-                if (width != -1) {
-                    if (prev)
-                        sql = sql + " AND ";
-                    sql = sql + "width = " + width;
-                    prev = true;
-                }
-                if (count != -1) {
-                    if (prev)
-                        sql = sql + " AND ";
-                    sql = sql + "count = " + count;
-                    prev = true;
-                }
-                if (prev)
-                    sql = sql + " AND ";
-                sql = sql + "isRotated = " + isRotated;
-
-                sql = sql + ";";
-            }
             ResultSet rs = stmt.executeQuery(sql);
 
             while(rs.next()){
                 Detail det = new Detail();
+                det.setId(rs.getInt("id"));
                 det.setId_orders(rs.getInt("id_orders"));
                 det.setId_material(rs.getInt("id_material"));
                 det.setHeight(rs.getInt("height"));
@@ -215,7 +160,7 @@ public class SQLiteManager {
         return null;
     }
 
-    public List<Orders> selectOrders(String client, Date dateStart, Date dateFinish) throws SQLException {
+    public List<Orders> selectOrders() throws SQLException {
         Connection conn = null;
 
         try{
@@ -223,34 +168,13 @@ public class SQLiteManager {
             conn.setAutoCommit(false);
             List<Orders> ords = new ArrayList<>();
             Statement stmt = conn.createStatement();
-            String sql = "SELECT client, dateStart, dateFinish FROM orders";
+            String sql = "SELECT * FROM orders";
 
-            boolean prev = false;
-            if ((client == null) && (dateStart == null) && (dateFinish == null))
-                sql = sql + ";";
-            else{
-                sql = sql + " WHERE ";
-                if (client != null) {
-                    sql = sql + "client = " + client;
-                    prev = true;
-                }
-                if (dateStart != null) {
-                    if (prev)
-                        sql = sql + " AND ";
-                    sql = sql + "dateStart = " + new SimpleDateFormat("yyyy-MM-dd").format(dateStart).toString();
-                    prev = true;
-                }
-                if (dateFinish != null) {
-                    if (prev)
-                        sql = sql + " AND ";
-                    sql = sql + "dateFinish = " + new SimpleDateFormat("yyyy-MM-dd").format(dateFinish).toString();
-                }
-                sql = sql + ";";
-            }
             ResultSet rs = stmt.executeQuery(sql);
 
             while(rs.next()){
                 Orders ord = new Orders();
+                ord.setId(rs.getInt("id"));
                 ord.setClient(rs.getString("client"));
                 ord.setDateStart(rs.getString("dateStart"));
                 ord.setDateFinish(rs.getString("dateFinish"));
@@ -267,26 +191,147 @@ public class SQLiteManager {
         }
         return null;
     }
-    /*
 
-    public int countPosts() throws SQLException {
-        int postNumber = 0;
+    //DELETE
+
+    public void deleteMaterial(int id) throws SQLException {
         Connection conn = null;
+        Statement stmt = null;
 
         try{
             conn = openConnection();
             conn.setAutoCommit(false);
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(("SELECT COUNT (*) AS number FROM posts;"));
-            postNumber = rs.next()?rs.getInt("number"):0;
-            rs.close();
+            stmt = conn.createStatement();
+
+            String sql = "DELETE FROM material WHERE id = " + id + ";";
+            stmt.executeUpdate(sql);
             stmt.close();
+            conn.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
+        finally{
             conn.close();
         }
-        return postNumber;
-    }*/
+    }
+
+    public void deleteOrders(int id) throws SQLException {
+        Connection conn = null;
+        Statement stmt = null;
+
+        try{
+            conn = openConnection();
+            conn.setAutoCommit(false);
+            stmt = conn.createStatement();
+
+            String sql = "DELETE FROM orders WHERE id = " + id + ";";
+            stmt.executeUpdate(sql);
+            stmt.close();
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally{
+            conn.close();
+        }
+    }
+
+    public void deleteDetail(int id) throws SQLException {
+        Connection conn = null;
+        Statement stmt = null;
+
+        try{
+            conn = openConnection();
+            conn.setAutoCommit(false);
+            stmt = conn.createStatement();
+
+            String sql = "DELETE FROM detail WHERE id = " + id + ";";
+            stmt.executeUpdate(sql);
+            stmt.close();
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally{
+            conn.close();
+        }
+    }
+
+    //UPDATE
+
+    public void updateMaterial(List<Integer> idList, List<Material> matList) throws SQLException {
+        Connection conn = null;
+        Statement stmt = null;
+
+        try{
+            conn = openConnection();
+            conn.setAutoCommit(false);
+            stmt = conn.createStatement();
+
+            for (int i = 0; i < idList.size(); i++) {
+                String sql = "UPDATE material SET description = " + matList.get(i).getDescription() +
+                        ", height = " + matList.get(i).getHeight() + ", width = " + matList.get(i).getWidth() +
+                        " WHERE id = " + idList.get(i) + ";";
+                stmt.executeUpdate(sql);
+            }
+            stmt.close();
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally{
+            conn.close();
+        }
+    }
+
+    public void updateOrders(List<Integer> idList, List<Orders> ordList) throws SQLException {
+        Connection conn = null;
+        Statement stmt = null;
+
+        try{
+            conn = openConnection();
+            conn.setAutoCommit(false);
+            stmt = conn.createStatement();
+
+            for (int i = 0; i < idList.size(); i++) {
+                String sql = "UPDATE orders SET client = " + ordList.get(i).getClient() +
+                        ", dateStart = " + ordList.get(i).getDateStart() + ", dateFinish = " + ordList.get(i).getDateFinish() +
+                        " WHERE id = " + idList.get(i) + ";";
+                stmt.executeUpdate(sql);
+            }
+            stmt.close();
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally{
+            conn.close();
+        }
+    }
+
+    public void updateDetail(List<Integer> idList, List<Detail> detList) throws SQLException {
+        Connection conn = null;
+        Statement stmt = null;
+
+        try{
+            conn = openConnection();
+            conn.setAutoCommit(false);
+            stmt = conn.createStatement();
+
+            for (int i = 0; i < idList.size(); i++) {
+                String sql = "UPDATE detail SET id_orders = " + detList.get(i).getId_orders() +
+                        ", id_material = " + detList.get(i).getId_material() + ", height = " + detList.get(i).getHeight() +
+                        ", width = " + detList.get(i).getWidth() + ", count = " + detList.get(i).getCount() + ", isRotated = " + detList.get(i).getRotated() +
+                        " WHERE id = " + idList.get(i) + ";";
+                stmt.executeUpdate(sql);
+            }
+            stmt.close();
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally{
+            conn.close();
+        }
+    }
 }

@@ -6,9 +6,14 @@ import java.util.Date;
 
 public class Orders {
 
+    private int id;
     private String client;
     private Date dateStart;
     private Date dateFinish;
+
+    public void setId(int id){
+        this.id = id;
+    }
 
     public void setClient(String client){
         this.client = client;
@@ -28,6 +33,10 @@ public class Orders {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getId(){
+        return id;
     }
 
     public String getClient(){

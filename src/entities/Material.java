@@ -2,9 +2,14 @@ package entities;
 
 public class Material {
 
+    private int id;
     private String description;
     private int height;
     private int width;
+
+    public void setId(int id){
+        this.id = id;
+    }
 
     public void setDescription(String description){
         this.description = description;
@@ -16,6 +21,10 @@ public class Material {
 
     public void setWidth(int width){
         this.width = width;
+    }
+
+    public int getId(){
+        return id;
     }
 
     public String getDescription(){

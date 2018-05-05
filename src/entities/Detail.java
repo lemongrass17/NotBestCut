@@ -2,12 +2,17 @@ package entities;
 
 public class Detail {
 
+    private int id;
     private int id_orders;
     private int id_material;
     private int height;
     private int width;
     private int count;
     private boolean isRotated;
+
+    public void setId(int id){
+        this.id = id;
+    }
 
     public void setId_orders(int id_orders){
         this.id_orders = id_orders;
@@ -31,6 +36,10 @@ public class Detail {
 
     public void setRotated(boolean isRotated){
         this.isRotated = isRotated;
+    }
+
+    public int getId(){
+        return id;
     }
 
     public int getId_orders(){
