@@ -7,9 +7,9 @@ import java.util.Date;
 public class Orders {
 
     private int id;
-    private String client;
-    private Date dateStart;
-    private Date dateFinish;
+    private String client = null;
+    private Date dateStart = null;
+    private Date dateFinish = null;
 
     public void setId(int id){
         this.id = id;

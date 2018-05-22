@@ -1,6 +1,6 @@
 package entities;
 
-public class Detail {
+public class Details {
 
     private int id;
     private int id_orders;
